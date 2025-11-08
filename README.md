@@ -4,4 +4,4 @@ The first file is a combination of theoretical and numerical analysis of Merton'
 
 The second file is an attempt to establish contact between the MJD model and real market data. We fit the MJD model parameters to call option market data of an asset. Then, we test the fit of the model by comparing its predictions of put option prices to actual put option data from the market.
 
-The presentation is a brief summary of the results from the project, and there is also an accompanying video summary at 
+The presentation is a brief summary of the results from the project, and there is also an accompanying video summary at https://youtu.be/z8wizw0nYQI
