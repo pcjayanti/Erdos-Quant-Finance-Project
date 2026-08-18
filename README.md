@@ -27,11 +27,9 @@ reproducible rather than dependent on live data.
 
 **`Project presentation`** - The presentation is a brief summary of the results from the original project (submitted in Nov 2025), and there is also an accompanying video summary at https://youtu.be/z8wizw0nYQI . The presentation and video do not reflect any modifications made after Nov 2025.
 
-
 ## Results
 
-Calibrated on 234 liquid calls; tested on 245 liquid puts. Errors in
-implied-volatility points:
+Calibrated on 234 liquid calls; tested out-of-sample on 245 liquid puts. Errors in implied-volatility points:
 
 | | IV RMSE | IV bias |
 |---|---|---|
@@ -40,32 +38,23 @@ implied-volatility points:
 
 By moneyness (K/S):
 
-| Bucket | n | MJD RMSE | BSM RMSE |
-|---|---|---|---|
-| deep OTM (<0.85) | 92 | 10.01 | 36.37 |
-| OTM (0.85–0.95) | 77 | 1.43 | 11.49 |
-| near ATM (0.95–1.05) | 73 | 1.11 | 2.22 |
+| Bucket | n | MJD RMSE | MJD bias | BSM RMSE | BSM bias |
+|---|---|---|---|---|---|
+| deep OTM (<0.85) | 92 | 10.01 | −7.69 | 36.37 | −32.98 |
+| OTM (0.85–0.95) | 77 | 1.43 | 1.17 | 11.49 | −10.97 |
+| near ATM (0.95–1.05) | 73 | 1.11 | −0.32 | 2.22 | −1.18 |
+| ITM (>1.05) | 3 | 3.90 | −3.88 | 1.43 | −1.39 |
 
-MJD fits the liquid region to roughly 1.3 vol points, against 8.4 for the
-benchmark. The advantage widens with distance from spot — the wings are
-precisely where a flat-volatility model has no mechanism to respond.
+MJD reduces out-of-sample implied-volatility error by roughly 73% relative to the benchmark. The advantage widens with distance from spot — from about 2x near the money to 8x in the OTM wing — which is where the volatility smile lives and where a flat-volatility model has no mechanism to respond. The ITM bucket contains only 3 options and is not meaningful.
 
-**Limitation.** MJD systematically underprices far-tail volatility (−7.69 vol
-point bias below 0.85 moneyness). This is a model limitation rather than a data
-artifact: median bid-ask width there corresponds to 0.15 vol points against a
-median model error of 4.81, and MJD's implied volatility falls outside the
-quoted range on every deep-OTM strike. A single lognormal jump size
-distribution cannot produce skew as steep as the market prices.
+**Limitation.** MJD systematically underprices far-tail volatility (−7.69 vol point bias below 0.85 moneyness). This is a model limitation rather than a data artifact: median bid-ask width in that region corresponds to 0.15 vol points against a median model error of 4.81, and MJD's implied volatility falls outside the quoted bid-ask range on every deep-OTM strike. A single lognormal jump size distribution cannot produce skew as steep as the market prices in the deep tail; capturing it would require a richer jump distribution or stochastic volatility.
 
-**On metrics.** Both models exceed R² = 0.98 on put prices, which is
-uninformative here: a model using discounted intrinsic value alone, with no
-volatility input, scores R² = 0.82 on the same data. Option prices are
-dominated by predictable variation with moneyness, so R² largely measures
-whether a model knows the gross shape of the price curve. Implied volatility
-isolates the uncertainty premium — the part a model actually predicts.
+**On metrics.** Both models exceed R² = 0.98 on put prices, which is uninformative here: a model using discounted intrinsic value alone, with no volatility input at all, scores R² = 0.82 on the same data. Option prices are dominated by predictable variation with moneyness, so R² largely measures whether a model knows the gross shape of the price curve rather than whether it prices the uncertainty premium correctly. Implied volatility isolates exactly that premium, which is the quantity a model predicts.
+
+**Benchmark caveat.** The Black-Scholes benchmark uses a single at-the-money implied volatility for all strikes, so it ignores the smile by construction. This is a deliberately simple baseline, not the strike-specific implied volatility a practitioner would quote against.
 
 ## Reproducing
 
 Requires `numpy`, `pandas`, `scipy`, `matplotlib`, `scikit-learn`, `yfinance`.
-Run the load cell rather than the calibration cell to use the saved snapshot;
-live calibration requires market hours.
+
+Run the load cell rather than the calibration cell to use the saved snapshot. Live calibration requires market hours (09:30–16:00 ET) — outside those hours Yahoo returns option chains with no live quotes.
