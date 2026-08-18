@@ -25,7 +25,7 @@ against a flat-volatility Black-Scholes benchmark.
 state. The notebook runs against this snapshot offline, so the results below are
 reproducible rather than dependent on live data.
 
-**Project presentation** - The presentation is a brief summary of the results from the original project (submitted in Nov 2025), and there is also an accompanying video summary at https://youtu.be/z8wizw0nYQI . The presentation and video do not reflect any modifications made after Nov 2025.
+**`Project presentation`** - The presentation is a brief summary of the results from the original project (submitted in Nov 2025), and there is also an accompanying video summary at https://youtu.be/z8wizw0nYQI . The presentation and video do not reflect any modifications made after Nov 2025.
 
 
 ## Results
